@@ -1,0 +1,502 @@
+                                                         Spring Boot
+                                                         ===========
+1.What is Spring Boot?
+======================
+->Spring Boot is a Spring framework module which provides RAD(Rapid Application Development) feature to the Spring framework. 
+  It is highly dependent on the starter templates feature which is very powerful.
+->When we develop spring boot application it provides two type of packaging service.one is jar and second one is war.
+->Spring Boot is a Framework from “The Spring Team” to easy the bootstrapping and development of new Spring Applications.
+->It provides defaults for code and annotation configuration to quick start new Spring projects within no time. 
+->It avoid lot of boilerplate code and configuration to improve Development, Unit Test and Integration Test Process.
+
+2.Advantages of Spring Boot?
+============================
+->It is very easy to develop Spring Based applications with Java.
+->To provide Opinionated Development approach.
+->To avoid writing lots of import statements.
+->To provide some defaults to quick start new projects within no time.
+->The main goal of Spring Boot Framework is to reduce Development, Unit Test and Integration Test time and to ease the 
+  development of Production ready web applications very easily compared to existing Spring Framework, which really takes 
+  more time.
+->To avoid XML Configuration completely.It offers annotation-based spring application.
+->To avoid defining more Annotation Configuration(It combined some existing Spring Framework Annotations to a simple and 
+  single Annotation)
+->It is very easy to integrate Spring Boot Application with its Spring Ecosystem like Spring JDBC, Spring ORM, Spring Data,
+  Spring Security etc.
+->It provides Embedded HTTP servers like Tomcat, Jetty etc.To develop and test our web applications very easily.No need of 
+  deploy in manually to any external servers.
+->It provides CLI (Command Line Interface) tool to develop and test Spring Boot Java Applications from command prompt very 
+  easily and quickly.
+->It provides lots of plugins to develop and test Spring Boot Applications very easily using Build Tools like Maven and 
+  Gradle.
+->It provides two type of packaging service.one is jar and second one is war.
+->It also provide Properties File.Properties files are used to keep 'N' number of properties in a single file to run the
+  application in a different environment. In Spring Boot, properties are kept in the application. properties file under
+  the classpath.We can use also YAML files in the place of Properties File.
+->It provides lots of plugins to work with embedded and in-memory Databases very easily.
+->we can use Spring STS IDE or Spring Initializr Website to develop Spring Boot Java Applications.
+
+Note:-That means Spring Boot is nothing but existing Spring Framework + Some Embedded HTTP Servers 
+      (Tomcat/Jetty etc.) – XML or Annotations Configurations.
+      Here minus means we don’t need to write any XML Configuration and few Annotations only.
+
+3.Limitation/Drawback of Spring Boot?
+=====================================
+->Spring Boot Framework has one limitation.It is bit time consuming process to convert existing or legacy Spring Framework 
+  projects into Spring Boot Applications.
+
+4.What is Spring Boot Starter Parent?
+=====================================
+->The spring-boot-starter-parent project is a special starter project – that provides default configurations for our 
+  application and a complete dependency tree to quickly build our Spring Boot project.
+->Beyond that, it also inherits dependency management from spring-boot-dependencies which is the parent to the 
+  spring-boot-starter-parent.
+->Once, we've declared the starter parent in our project, we can pull any dependency from the parent by just declaring it
+  in our dependencies tag.
+->It also provides default configuration for Maven and Gradle plugins.
+->Also, we don't need to define versions of the dependencies, Maven or gradle will download jar files based on the version 
+  defined for starter parent in the parent tag.
+
+<!-- Parent pom is mandatory to control versions of child dependencies -->
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.1.5.RELEASE</version>
+</parent>
+
+5.What is starter template?
+===========================
+->Spring Boot starters are templates that contain a collection of all the relevant transitive dependencies that are needed
+  to start a particular functionality.
+->Example: spring-boot-starter-web
+  If you want to create a Spring WebMVC application then in a traditional setup, you would have included all required 
+  dependencies yourself. It leaves the chances of version conflict which ultimately result in more runtime exceptions.
+  With Spring boot, to create MVC application all you need to import is spring-boot-starter-web dependency.We don't need
+  to specify the version: Maven will download jar files based on the version defined for starter parent in the parent tag.
+
+<!-- Spring web brings all required dependencies to build web application. -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+->Above spring-boot-starter-web dependency, internally imports all given dependencies and add to your project like,Tomcat.
+<dependency>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-tomcat</artifactId>
+     <scope>provided</scope>
+</dependency>
+
+6.Embedded servers
+==================
+(i)Spring Boot Tomcat
+---------------------
+<dependency>
+     <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-tomcat</artifactId>
+     <scope>provided</scope>
+</dependency>
+
+->Spring Boot web starter use Tomcat as an embedded container by default. This means if we are using the 
+  spring-boot-starter-web starter, Spring Boot initialize and start embedded Tomcat server for us.
+->By default, Spring boot applications start with embedded tomcat server start at default port 8080.
+->We can change default embedded server port to any other port just like,two types.
+
+application.properties
+----------------------
+server.port=9000
+
+application.yml
+---------------
+server:
+  port : 9000
+
+(ii)Spring Boot Jetty
+---------------------
+->To use Jetty in your Spring Boot application, we can use the spring-boot-starter-jetty starter. Spring Boot provides 
+  Tomcat and Jetty dependencies bundled together as separate starters to help make this process as easy as possible. 
+  Add the spring-boot-starter-jetty starter in your pom.xml file.
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency
+
+->Above configuration will add Jetty to your Spring Boot application. Before we move ahead; we need to exclude the default 
+  tomcat server from the spring-boot-starter-web starter to avoid the conflict. Use the exclusion tag in your pom.xml for 
+  this:
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+
+application.properties
+----------------------
+#For chane the port no
+server.port=8888
+#For provide application context path name
+server.servlet.context-path=/home
+
+7.Bootstrap the application
+===========================
+->To run the application, we need to use @SpringBootApplication annotation. Behind the scenes, that’s equivalent to 
+  
+@Configuration, @EnableAutoConfiguration, and @ComponentScan together.
+ 
+ @SpringBootApplication = @Configuration + @ComponentScan + @EnableAutoConfiguration
+->It enables the scanning of config classes, files and load them into spring context.
+->Autoconfiguration is enabled with @EnableAutoConfiguration annotation. Spring boot auto configuration scans the classpath, 
+  finds the libraries in the classpath and then attempt to guess the best configuration for them, and finally configure all 
+  such beans.
+
+Eg:1-
+MyApplication.java
+@SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
+public class MyApplication
+{
+    public static void main(String[] args)
+    {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+
+Eg:2-
+@Configuration
+@EnableAutoConfiguration
+@Import({ MyConfig.class, MyAnotherConfig.class })
+public class MyApplication
+{
+    public static void main(String[] args)
+    {
+        SpringApplication.run(MyApplication.class, args);
+    }
+}
+->In this example, Application is just like any other Spring Boot application except that @Component-annotated classes are 
+  not detected automatically and the user-defined beans are imported explicitly by @Import.
+
+8.Spring Boot Annotations
+=========================
+(i)@SpringBootApplication
+-------------------------
+->Spring boot is mostly about auto-configuration. This auto-configuration is done by component scanning i.e. finding all 
+  classes in classspath which is bind with @Component annotation. It also involve scanning of @Configuration annotation and
+  initialize some extra beans.
+->@SpringBootApplication annotation enable all able things in one step. i.e;use auto-configuration, component scan and be 
+  able to define extra configuration on their "application class".
+
+@EnableAutoConfiguration : enable auto-configuration mechanism.
+@ComponentScan : finding all classes in classspath which is bind with @Component annotation.
+@SpringBootConfiguration /@Configuration : allow to register extra beans in the context or import additional configuration 
+                                           classes.
+->@SpringBootApplication = @Configuration + @ComponentScan + @EnableAutoConfiguration
+
+(ii)@EnableAutoConfiguration
+----------------------------
+->@EnableAutoConfiguration annotation auto-configures the beans that are present in the classpath.ex: tomcat-embedded.jar.
+  This simplifies the developers work by guessing the required beans from the classpath and configure it to run the 
+  application.
+->This annotation is used to enable auto-configuration of the Spring Application Context, attempting to guess and configure 
+  beans that you are likely to need. Auto-configuration classes are usually applied based on your classpath and what beans 
+  you have defined.
+
+Disabling Specific Auto-configuration Classes
+---------------------------------------------
+->If you find that specific auto-configuration classes that you do not want are being applied,we can do it by two types.
+  1)you can use the exclude attribute of @EnableAutoConfiguration to disable them, as shown in the following example:
+
+@Configuration
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+public class MyConfiguration {
+}
+  2)Or Using the spring.autoconfigure.exclude property in properties file.
+
+(iii)@SpringBootConfiguration  / @Configuration
+-----------------------------------------------
+->@SpringBootConfiguration is new annotation in Spring boot 2. Previously, we have been using @Configuration annotation. 
+  You can use @Configuration in place of this. Both are same thing.
+->It indicates that a class provides Spring Boot application @Configuration. It simply means that annotated class is a 
+  configuration class and shall be scanned for further configurations and bean definitions(means allow to register extra 
+  beans in the context or import additional configuration classes).
+
+(iv)@ComponentScan
+------------------
+->This annotation enables component-scanning so that the web controller classes and other components you create will be 
+  automatically identified and registered as beans in Spring's Application Context. 
+->This annotation provides support parallel with Spring XML’s context:component-scan element.
+->Either basePackageClasses() or basePackages() may be specified to define specific packages to scan. If specific packages 
+  are not defined, scanning will occur from the package of the class that declares this annotation.
+
+(v)@ImportAutoConfiguration
+---------------------------
+->You would use @ImportAutoConfiguration when you don't want to enable the default autoconfiguration with 
+  @EnableAutoConfiguration. As you probably know, @EnableAutoConfiguration attemps to configure beans that are located on 
+  your classpath eg tomcat-embedded.jar. Whereas @ImportAutoConfiguration only runs the configuration classes that you 
+  provided in the annotation.
+
+eg:-
+@ComponentScan("path.to.your.controllers")
+@ImportAutoConfiguration({WebMvcAutoConfiguration.class
+    , DispatcherServletAutoConfiguration.class
+    , EmbeddedServletContainerAutoConfiguration.class
+    , ServerPropertiesAutoConfiguration.class
+    , HttpMessageConvertersAutoConfiguration.class})
+public class App {
+  public static void main(String[] args) {
+    SpringApplication.run(App.class, args);
+  }
+}
+->You might say that it is an alternative to using @EnableAutoConfiguration.
+
+(vi)@AutoConfigureBefore, @AutoConfigureAfter, @AutoConfigureOrder 
+------------------------------------------------------------------
+->These annotations are used if the configuration needs to be applied in a specific order (before of after).
+
+(vii)Conditional – annotations
+------------------------------
+->Conditional – annotations such as @ConditionalOnBean, @ConditionalOnWebApplication or @ConditionalOnClass allow to 
+  register a bean only when the condition meets.
+
+9.Spring Boot Profiles
+======================
+->Application development is complex process. You might have different environment for application development.
+Dev
+SIT
+QA
+UAT
+Prod
+->We require different configuration based on the environment.
+Ex: Using a different database or different queues.
+
+->When we create an application, we need to deploy it in different kinds of environments, such as development,QA,
+  staging and production.
+->The application configuration in each of these environments will be different.
+->One of the approaches to handling application configuration is to create something called a profile.
+Ex:-
+Setting active profile
+----------------------
+->When you run spring boot application, you need to set active profile. There are multiple ways to set active profile.
+->By using     -Dspring.profiles.active=dev      in VM Arguments(When we run like- Run Configurations)
+->By using      spring.profiles.active=dev       in application.properties(When we run like- Spring Boot App)
+
+10.What is an Actuator?
+=======================
+->In essence, Actuator brings production-ready features to our application.
+->Actuator is mainly used to expose operational information about the running application – health, metrics, info, dump,
+  env, etc. It uses HTTP endpoints or JMX beans to enable us to interact with it.
+->Once this dependency is on the classpath several endpoints are available for us out of the box. As with most Spring 
+  modules, we can easily configure or extend it in many ways.
+
+Actuator Dependency
+-------------------
+->Once this dependency is on the classpath several endpoints are available for us out of the box. As with most Spring 
+  modules,we can easily configure or extend it in many ways.
+->To enable Spring Boot Actuator we’ll just need to add the spring-boot-actuator dependency to our package manager or 
+  pom.xml file.
+  In Maven:
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+
+1)Spring Boot 1.x Actuator
+--------------------------
+->In 1.x, Actuator brings its own security model. It takes advantage of Spring Security.
+->Actuator requires Spring MVC to expose its endpoints through HTTP. No other technology is supported.
+
+(i)Actuator Endpoints
+---------------------
+->Also, most endpoints are sensitive – meaning they’re not fully public, or in other words, most information will be
+  omitted – while a handful is not. eg:-/info.
+Ex:-
+-> /health – Shows application health information.
+-> /info – Displays arbitrary application info.
+-> /metrics – Shows ‘metrics’ information for the current application.
+-> /trace – Displays trace information.
+
+->Note:Besides using the existing endpoints provided by Spring Boot, we could also create an entirely new one.
+  Firstly, we’d need to have the new endpoint implement the Endpoint<T> interface.
+Ex:
+@Component
+public class CustomEndpoint implements Endpoint<List<String>> {
+   ------
+   ------
+   ------
+}
+
+(ii)Configuring Existing Endpoints
+----------------------------------
+->Each endpoint can be customized with properties using the following format: 
+  endpoints.[endpoint name].[property to customize]
+->Three properties are available:
+1. id – by which this endpoint will be accessed over HTTP
+2. enabled – if true then it can be accessed otherwise not
+3. sensitive – if true then need the authorization to show crucial information over HTTP
+For example, add the following properties will customize the /beans endpoint:
+
+application.properties
+----------------------
+endpoints.beans.id=springbeans
+endpoints.beans.sensitive=false
+endpoints.beans.enabled=true
+
+(iii)Security of Endpoints
+--------------------------
+->We can change the management.port,management.address property to restrict where the endpoints can be accessed from over
+  the network.we can write it in the application.properties file.
+application.properties
+----------------------
+#port used to expose actuator
+management.port=8081 
+#CIDR allowed to hit actuator
+management.address=127.0.0.1 
+#Whether security should be enabled or disabled altogether
+management.security.enabled=false
+
+->We can secure these endpoints by defining the default security properties – username, password, and role – in the
+ application.properties file.
+application.properties
+----------------------
+security.user.name=admin
+security.user.password=secret
+management.security.role=SUPERUSER
+
+2)Spring Boot 2.x Actuator
+--------------------------
+->Furthermore, the latest version supports now the CRUD model, as opposed to the old RW (read/write) model.
+->Hence, with this new model, we’re able to take advantage of MVC as well as WebFlux as an underlying web technology.
+->Lastly, JMX remains supported to expose endpoints without any additional code.
+->Unlike in previous versions, Actuator comes with most endpoints disabled.
+  Thus, the only two available by default are /health and /info.
+
+(i)Predefined Endpoints
+-----------------------
+-> /auditevents – lists security audit-related events such as user login/logout. 
+-> /beans – returns all available beans in our BeanFactory.
+-> /env – returns the current environment properties.
+-> /health – summarises the health status of our application.
+-> /info – returns general information about the application.
+-> /logfile – returns ordinary application logs.
+-> /metrics – details metrics of our application.
+-> /scheduledtasks – provides details about every scheduled task within our application.
+-> /sessions – lists HTTP sessions given we are using Spring Session.
+-> /conditions – formerly known as /autoconfig, builds a report of conditions around auto-configuration.
+-> /configprops – allows us to fetch all @ConfigurationProperties beans.
+-> /shutdown – performs a graceful shutdown of the application.
+
+(ii)Enable All Endpoints
+------------------------
+->In order to access the actuator endpoints using HTTP, we need to both enable and expose them. By default, all endpoints
+  are disabled. Only the /health and /info endpoints are exposed by default.
+
+->We need to add the following configuration to expose all endpoints:
+management.endpoints.web.exposure.include=*
+
+->To explicitly enable a specific endpoint (for example /shutdown), we use:
+management.endpoint.shutdown.enabled=true
+
+->To expose all enabled endpoints except one (for example /loggers), we use:
+management.endpoints.web.exposure.include=*
+management.endpoints.web.exposure.exclude=loggers
+
+11.Main method of Spring Boot Class?
+====================================
+-> Let a application name is EmployeeLogin
+  Then main method of the Spring Boot application is
+Ex:
+@SpringBootApplication
+public class EmployeeLoginApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(EmployeeLoginApplication.class, args);
+	}
+
+}
+
+12.Some Important starter for spring Boot
+=========================================
+         Name                                        Description
+         ====                                        ===========
+spring-boot-starter-parent                 Core starter, including auto-configuration support
+spring-boot-starter-aop                    Starter for aspect-oriented programming with Spring AOP and AspectJ
+spring-boot-starter-batch                  Starter for using Spring Batch
+spring-boot-starter-cache                  Starter for using Spring Framework’s caching support
+spring-boot-starter-data-jpa               Starter for using Spring Data JPA with Hibernate
+spring-boot-starter-data-ldap              Starter for using Spring Data LDAP
+spring-boot-starter-data-mongodb           Starter for using MongoDB document-oriented database and Spring Data MongoDB
+spring-boot-starter-data-mongodb-reactive  Starter for Spring Data MongoDB Reactive
+spring-boot-starter-jdbc                   Starter for using JDBC with the HikariCP connection pool
+spring-boot-starter-json                   Starter for reading and writing json
+spring-boot-starter-mail                   Starter for using Java Mail and Spring Framework’s email sending support
+spring-boot-starter-security               Starter for using Spring Security
+spring-boot-starter-test              Starter for testing Spring Boot applications with libraries including JUnit and Mockito
+spring-boot-starter-web               Starter for building web based application(Spring MVC)
+spring-boot-starter-actuator          Starter for using Spring Boot’s Actuator which provides production ready features
+spring-boot-starter-log4j2            Starter for using Log4j2 for logging.
+spring-boot-starter-tomcat            Starter for using Tomcat as the embedded servlet container.
+spring-boot-starter-jetty             Starter for using Jetty as the embedded servlet container.
+spring-boot-devtools                  for Developer Tools
+
+13.Some important tools for Spring Boot
+=======================================
+(i)spring-boot-devtools(Developer Tools)     
+----------------------------------------
+->It automatically restarts a running application as soon as any change is made in the files situated in the classpath. 
+  The developer need not restart the application to reflect changes made in the code. It saves lot of the developer's time.
+->If you have worked on latest UI development frameworks e.g. Node, angular, gulp etc. then you must have appreciated the 
+  auto-reload of UI in browser whenever there is change in some code. Its pretty useful and saves a lot of time.
+->The automatic change in the code not only restarts the application but also refreshes the browser automatically.
+  Precondition is that your browser should have supported extention for it.By default, live reload is enabled. If you wish
+  to disable this feature for some reason, then set the below property.
+
+application.properties
+----------------------
+#Set false to disable live reload
+spring.devtools.livereload.enabled = false 
+
+By default, Auto-reload works on these paths:
+---------------------------------------------
+/META-INF/maven
+/META-INF/resources
+/resources
+/static
+/public
+/templates
+->If you want to disable auto-reload in browser for files in few of these paths, then use "spring.devtools.restart.exclude"
+  property in application proprties file.
+Ex: spring.devtools.restart.exclude=static/**,public/**
+
+Maven:
+pom.xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <optional>true</optional>
+    </dependency>
+</dependencies>
+
+Gradle:
+build.gradle
+dependencies {
+    compile("org.springframework.boot:spring-boot-devtools")
+}
+
+14.Difference Between JAR and WAR Packaging
+===========================================
+->Simply put, JAR – or Java Archive – is a package file format. JAR files have the .jar extension and may contain libraries,
+  resources, and metadata files.Essentially, it's a zipped file containing the compressed versions of .class files and 
+  resources of compiled Java libraries and applications.
+->WAR stands for Web Application Archive or Web Application Resource. These archive files have the .war extension and are
+  used to package web applications that we can deploy on any Servlet/JSP container.
+->The main functionality of JAR files allow us to package multiple files in order to use it as a library, plugin, or any
+  kind of application. On the other hand, WAR files are used only for web applications.
