@@ -286,6 +286,7 @@ Setting active profile
 ----------------------
 ->When you run spring boot application, you need to set active profile. There are multiple ways to set active profile.
 ->By using     -Dspring.profiles.active=dev      in VM Arguments(When we run like- Run Configurations)
+               -Dserver.port=8082
 ->By using      spring.profiles.active=dev       in application.properties(When we run like- Spring Boot App)
 
 10.What is an Actuator?
